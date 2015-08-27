@@ -1,0 +1,28 @@
+{
+  "name": "CaptionSS",
+  "version": "1.1.0",
+  "authors": [
+    "jbranchaud <jbranchaud@gmail.com>"
+  ],
+  "description": "Sensible CSS Image Captions",
+  "main": "captionss.css",
+  "license": "MIT",
+  "homepage": "http://captionss.com",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "_release": "1.1.0",
+  "_resolution": {
+    "type": "version",
+    "tag": "v1.1.0",
+    "commit": "8741619d0e22df4ea6ccd95198f2bc90847d84a5"
+  },
+  "_source": "git://github.com/jbranchaud/captionss.git",
+  "_target": "~1.1.0",
+  "_originalSource": "captionss",
+  "_direct": true
+}

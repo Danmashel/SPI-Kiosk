@@ -1,0 +1,138 @@
+<html ng-app="mainApp">
+	<title>ShelleyPhotographyInc</title>
+	<head>
+		<script type="text/javascript" src="components/socket.io-1.3.2.js"></script>
+		<script type="text/javascript" src="components/angular/angular.js"></script>
+		<script type="text/javascript" src="components/angular-animate/angular-animate.min.js"></script>
+		<script type="text/javascript" src="components/jquery-2.1.1.min.js"></script>
+		<script type="text/javascript" src="components/materialize/js/materialize.min.js"></script>
+		<script type="text/javascript" src="components/fancybox/lib/jquery.mousewheel-3.0.6.pack.js"></script>
+		<script type="text/javascript" src="components/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+		<script type="text/javascript" src="components/mainHead.js"></script>
+		<link type="text/css" rel="stylesheet" href="components/materialize/css/materialize.min.css"  media="screen,projection"/>
+		<link type="text/css" rel="stylesheet" href="components/ng-animation.css" />
+		<link type="text/css" rel="stylesheet" href="components/fancybox/source/jquery.fancybox.css" />
+		<link type="text/css" rel="stylesheet" href="components/captionss/captionss.css" >
+	</head>
+<body class="blue-grey lighten-5">
+	<div style="position:absolute; top:15%; width:700px; height:300px; margin-left:-350px; left:50%; z-index:-1000; text-align:center; opacity: 0.6;">
+		<h1>View your photos here</h1>
+	</div>	
+	
+	<ul id="thumbSizeSelector" class="dropdown-content">
+		<li><a href="#!" onClick="angular.element(document.getElementById('pictureNav')).scope().thumbSize(1)">Default Size</a></li>
+		<li><a href="#!" onClick="angular.element(document.getElementById('pictureNav')).scope().thumbSize(1.5)">1.5x</a></li>
+		<li><a href="#!" onClick="angular.element(document.getElementById('pictureNav')).scope().thumbSize(2)">2.0x</a></li>
+	</ul>
+	
+	<div id="noStealingModal" class="modal blue lighten-4">
+		<div class="card-panel center-align">
+			<img src="noPictures.jpg"></img>
+		</div>	
+		<div class="card-panel center-align">
+			By clicking "I agree" I certify that I will <u>NOT</u> take any pictures of this or any other Shelley Photography, Inc photo-viewing screen for personal or professional use. Should I violate this agreement by doing so, I will be asked to remove all such photos from the imaging
+			device as witnessed by a Shelley Photography, Inc. employee to their satisfaction. Should I refuse such deletion I agree that I am in violation of the U.S. Copyright Act, and am subject to be persecuted to the full extent of the law.
+		</div>
+		<div class="center-align">
+			<a href="#" class="waves-effect waves-green btn-large modal-action modal-close">I Agree</a>
+			<a href="#" onClick='location.reload();' class="waves-effect waves-green btn-large modal-action modal-close">I Disagree</a>
+		</div>
+	</div>
+	
+	<div id="nothingHereModal" class="modal blue lighten-4">
+		<div class="card-panel center-align">
+			<img src="nothingHere.jpg" width="650"></img>
+		</div>	
+		<div class="center-align">
+			<a href="#" onClick="$('#nothingHereModal').closeModal();" class="waves-effect waves-green btn-large modal-action modal-close">Close</a>
+		</div>
+	</div>
+	<div id="favoritesModal" style="width:1400px;" class="modal ">
+		<div class="container">
+			<div class="card-panel">
+				<div style="position:relative; width:300px; left:50%; margin-top:-10px; margin-left:-150; height:60px; opacity: 0.8;">
+					<center><h1>Favorites</h1></center>
+				</div>				
+			</div>
+		</div>
+		
+		<div class="center-align"  id='favoritesNav' ng-controller='mainController'>
+			<span ng-repeat="favorite in favorites">
+				<span class="card-panel" style="display:inline-block;">
+					<figure class="medium embed reveal-smooth dark" style="width:150">
+						<a class="fancybox" rel="favoritesGallery" href="{{favorite.path}}" title="Filename: {{favorite.name}}"><img src="{{favorite.path}}" /></a>
+						<figcaption style="right:3px; bottom:3px; width:45px; height:45px;">
+							<a class="btn-floating tooltipped btn waves-effect waves-light red" data-position="top" data-delay="50" data-tooltip="Remove me from favorites" ng-click="removeFavorite(favorite.index)"><i class="small mdi-action-highlight-remove"></i></a>
+						</figcaption>
+					</figure>
+					<br><br>
+						<a class="btn tooltipped blue darken-4" data-position="bottom" data-delay="50" data-tooltip="Write me on the order form">{{favorite.name}}</a>
+					<br>
+
+				</span>
+			</span>
+			<br>
+			<a class="waves-effect waves-light btn  red darken-2" onClick="clearAllFavorites()">Remove all</a><br>
+			<a class="waves-effect waves-light btn modal-action modal-close blue darken-4">Close Favorites</a></center>
+		</div>
+	</div>
+	
+	<div class="navbar-fixed">
+		<nav>
+		  <div class="nav-wrapper blue darken-4">
+			<div class="col s12">
+			<a href="#" onClick='location.reload();'><i class="mdi-navigation-refresh left"></i>Start from the beginning</a>
+			  <ul class="right side-nav">
+				<li><a href="#" onClick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="mdi-hardware-keyboard-arrow-up left"></i>Back to Top</a></li>
+				<li><a href="#" onClick="$('#favoritesModal').openModal();"><i class="medium mdi-action-favorite-outline left"></i>Favorites</a></li>
+				<li><a class="dropdown-button" href="#!" data-activates="thumbSizeSelector">Thumbnail Size<i class="mdi-action-search left"></i></a></li>
+			  </ul>
+			</div>
+		  </div>
+		</nav>
+	</div>	
+	
+	<div class="row">
+		<div id="folderNavColumn" style="position:absolute; top:35%; width:100%;">
+			<div class="col s12 card-panel grey darken-3">
+				<div class='center-align' id="folderNav" ng-controller="mainController">
+					<span ng-repeat="step in steps" style="height:100%;" class="scale-fade">
+						<span class="card-panel" style="display:inline-block; min-width:200px;">
+							<h5 style="font-size:250%;">Step {{step.step}}</h5>
+							<div style="position:relative; text-align:center; width:250px; height:45px;">
+								<b><a style="font-size:125%;">{{step.instructions}}</a></b>
+							</div>
+							<br>
+							<select class="browser-default" onChange="getListing(this.value);">
+								<option value="" disabled>Click to Select</option>
+								<option  ng-repeat="member in step.members" value="{{member.path}}">{{member.name}}</option>
+							</select>
+						</span>
+					</span>
+				</div>
+			</div>
+		</div>	
+		<div class='center-align' id="pictureNav" ng-controller="mainController">
+			<span ng-repeat="pic in pics">
+				<span class="card-panel" style="display:inline-block;">
+					<figure class="medium embed reveal-smooth dark" style="width:{{pic.thumbSize}}">
+						<a class="fancybox" rel="photoGallery" href="{{pic.path}}" title="Filename: {{pic.name}}"><img src="{{pic.path}}" width="{{pic.thumbSize}}" /></a>
+						<figcaption style="right:3px; bottom:3px; width:45px; height:45px;">
+							<a class="btn-floating tooltipped btn waves-effect waves-light red" data-position="top" data-delay="50" data-tooltip="Add to favorites" ng-click="addFavorite(pic.name,pic.path,pic.thumbSize)"><i class="small mdi-action-favorite-outline"></i></a>
+						</figcaption>
+					</figure>
+					<br><br>
+					<a class="btn tooltipped blue darken-4" data-position="bottom" data-delay="50" data-tooltip="Write me on the order form">{{pic.name}}</a>
+				</span>
+			</span>
+		</div>
+	</div>
+	
+	<div id="spi" style="position:absolute; bottom:1%; margin-left:-145px; left:50%; z-index:-1000; opacity: 0.4;">
+		<h5>Shelley Photography, Inc.</h5>
+	</div>
+	
+	<a href="#" data-activates="slide-out" class="button-collapse"></a>
+	<script type="text/javascript" src="components/mainFoot.js"></script>
+  </body>
+</html>
