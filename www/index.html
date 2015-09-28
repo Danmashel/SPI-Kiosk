@@ -60,7 +60,7 @@
 			<span ng-repeat="favorite in favorites">
 				<span class="card-panel" style="display:inline-block;">
 					<figure class="medium embed reveal-smooth dark" style="width:150">
-						<a class="fancybox" rel="favoritesGallery" href="{{favorite.path}}" title="Filename: {{favorite.name}}"><img src="{{favorite.path}}" /></a>
+						<a class="fancybox" rel="favoritesGallery" href="{{favorite.path}}" title="Filename: {{favorite.name}}"><img src="{{favorite.thumbpath}}" /></a>
 						<figcaption style="right:3px; bottom:3px; width:45px; height:45px;">
 							<a class="btn-floating tooltipped btn waves-effect waves-light red" data-position="top" data-delay="50" data-tooltip="Remove me from favorites" ng-click="removeFavorite(favorite.index)"><i class="small mdi-action-highlight-remove"></i></a>
 						</figcaption>
@@ -92,6 +92,13 @@
 		</nav>
 	</div>	
 	
+	<div class="card-panel" id="loadingBar" style="position:fixed; top:6%; width:100%; height:100%; z-index:1000; color:white; display:none;">
+		<div class="progress" style="position:absolute; width:700px; margin-left:-350px; left:50%; right: 50%; top: 38%;">
+			loading.
+			<div class="indeterminate"></div>
+		</div>
+	</div>	
+	
 	<div class="row">
 		<div id="folderNavColumn" style="position:absolute; top:35%; width:100%;">
 			<div class="col s12 card-panel grey darken-3">
@@ -116,9 +123,9 @@
 			<span ng-repeat="pic in pics">
 				<span class="card-panel" style="display:inline-block;">
 					<figure class="medium embed reveal-smooth dark" style="width:{{pic.thumbSize}}">
-						<a class="fancybox" rel="photoGallery" href="{{pic.path}}" title="Filename: {{pic.name}}"><img src="{{pic.path}}" width="{{pic.thumbSize}}" /></a>
+						<a class="fancybox" rel="photoGallery" href="{{pic.path}}" title="Filename: {{pic.name}}"><img src="{{pic.thumbpath}}" width="{{pic.thumbSize}}" /></a>
 						<figcaption style="right:3px; bottom:3px; width:45px; height:45px;">
-							<a class="btn-floating tooltipped btn waves-effect waves-light red" data-position="top" data-delay="50" data-tooltip="Add to favorites" ng-click="addFavorite(pic.name,pic.path,pic.thumbSize)"><i class="small mdi-action-favorite-outline"></i></a>
+							<a class="btn-floating tooltipped btn waves-effect waves-light red" data-position="top" data-delay="50" data-tooltip="Add to favorites" ng-click="addFavorite(pic.name,pic.path,pic.thumbpath,pic.thumbSize)"><i class="small mdi-action-favorite-outline"></i></a>
 						</figcaption>
 					</figure>
 					<br><br>

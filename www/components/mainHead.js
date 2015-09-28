@@ -9,9 +9,9 @@ angular.module('mainApp', ['ngAnimate'])
 		}
 		$scope.$apply();
 	}
-	$scope.addFavorite = function(favName, favPath, favThumbSize){
+	$scope.addFavorite = function(favName, favPath, favThumbPath, favThumbSize){
 		var indexValue = angular.element(document.getElementById('favoritesNav')).scope().favorites.length;
-		angular.element(document.getElementById('favoritesNav')).scope().favorites.push({name:favName,path:favPath,thumbSize:"125",index:indexValue});
+		angular.element(document.getElementById('favoritesNav')).scope().favorites.push({name:favName,path:favPath,thumbpath:favThumbPath,thumbSize:favThumbSize,index:indexValue});
 		toast('Added '+favName+" to favorites!", 2000)
 	}
 	$scope.removeFavorite = function(index){
@@ -61,11 +61,11 @@ console.log(returnData[0]);
 	if(returnData[0].hasChild == "true" && returnData[0].type == "directory"){
 		deleteHigherSteps(returnData[0].step - 1);
 		angular.element(document.getElementById('pictureNav')).scope().pics = [];
-		//angular.element(document.getElementById('pictureNav')).scope().pics.push({name:"Please follow the steps above to find your pictures",path:"startHere.jpg",thumbSize:"300"});
 		angular.element(document.getElementById('folderNav')).scope().steps.push(returnData[0]);
 		angular.element(document.getElementById('folderNav')).scope().$apply();
 	}
 	else if(returnData[0].hasChild == "true" && returnData[0].type == "picture"){
+		$('#loadingBar').show();
 		document.getElementById("folderNavColumn").style.position = "";
 		theftModal();	
 		angular.element(document.getElementById('pictureNav')).scope().pics = [];
@@ -73,12 +73,13 @@ console.log(returnData[0]);
 			angular.element(document.getElementById('pictureNav')).scope().pics.push({
 				name:returnData[0].members[i].name,
 				path:returnData[0].members[i].path.replace(returnData[0].wwwDir,""),
+				thumbpath:returnData[0].members[i].thumbpath.replace(returnData[0].wwwDir,""),
 				thumbSize:returnData[0].thumbSize,
 				originalThumbSize:returnData[0].thumbSize
 			});
 		}
 		angular.element(document.getElementById('pictureNav')).scope().$apply();
-		
+		$('#loadingBar').hide();
 	}
 	else{
 		angular.element(document.getElementById('pictureNav')).scope().pics = [];
